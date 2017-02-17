@@ -13,8 +13,8 @@
 
 	<scm>
 		<url>https://github.com/xlate/validators</url>
-		<connection>scm:git:git://github.com/xlate/validators.git</connection>
-		<developerConnection>scm:git:git@github.com/xlate/validators.git</developerConnection>
+		<connection>scm:git:https://github.com/xlate/validators.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:xlate/validators.git</developerConnection>
 	</scm>
 
 	<distributionManagement>
