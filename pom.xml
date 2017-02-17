@@ -18,6 +18,22 @@
 		<tag>HEAD</tag>
 	</scm>
 
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Michael Edgar</name>
+			<organizationUrl>https://www.xlate.io/</organizationUrl>
+		</developer>
+	</developers>
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -116,4 +132,5 @@
 			</build>
 		</profile>
 	</profiles>
+	<description>Additional validators and annotations for use with Java Bean Validation (JSR-303)</description>
 </project>
