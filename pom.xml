@@ -5,6 +5,8 @@
 	<artifactId>validators</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Additional Bean Validators for Java</name>
+	<description>Additional validators and annotations for use with Java Bean Validation (JSR-303)</description>
+	<url>https://github.com/xlate/validators</url>
 
 	<issueManagement>
 		<url>https://github.com/xlate/validators/issues</url>
@@ -132,5 +134,4 @@
 			</build>
 		</profile>
 	</profiles>
-	<description>Additional validators and annotations for use with Java Bean Validation (JSR-303)</description>
 </project>
