@@ -35,7 +35,7 @@ import io.xlate.validation.constraintvalidators.DateTimeValidator;
 @Constraint(validatedBy = { DateTimeValidator.class })
 public @interface DateTime {
 
-    String message() default "must be a valid date/time";
+    String message();
 
     Class<?>[] groups() default { };
 
