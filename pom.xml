@@ -6,6 +6,17 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Additional Bean Validators for Java</name>
 
+	<issueManagement>
+		<url>https://github.com/xlate/validators/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+
+	<scm>
+		<url>https://github.com/xlate/validators</url>
+		<connection>scm:git:git://github.com/xlate/validators.git</connection>
+		<developerConnection>scm:git:git@github.com/xlate/validators.git</developerConnection>
+	</scm>
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -72,6 +83,17 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-release-plugin</artifactId>
+						<version>2.5.3</version>
+						<configuration>
+							<autoVersionSubmodules>true</autoVersionSubmodules>
+							<useReleaseProfile>false</useReleaseProfile>
+							<releaseProfiles>release</releaseProfiles>
+							<goals>deploy</goals>
+						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
