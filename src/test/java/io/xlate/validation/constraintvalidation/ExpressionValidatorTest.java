@@ -1,11 +1,13 @@
 package io.xlate.validation.constraintvalidation;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.ConstraintValidatorContext;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
@@ -26,14 +28,13 @@ class ExpressionValidatorTest {
 
     @Mock Expression annotation;
 
-    /*@BeforeEach
+    @BeforeEach
     void initialize() {
         target = new ExpressionValidator();
-    }*/
+    }
 
     @Test
     void testLiteralTrue() {
-        target = new ExpressionValidator();
         Mockito.when(annotation.value()).thenReturn("true");
         target.initialize(annotation);
         Assertions.assertTrue(target.isValid(null, context));
@@ -41,7 +42,6 @@ class ExpressionValidatorTest {
 
     @Test
     void testLiteralFalse() {
-        target = new ExpressionValidator();
         Mockito.when(annotation.value()).thenReturn("false");
         target.initialize(annotation);
         Assertions.assertFalse(target.isValid(null, context));
@@ -49,7 +49,6 @@ class ExpressionValidatorTest {
 
     @Test
     void testStringIdentityTrue() {
-        target = new ExpressionValidator();
         Mockito.when(annotation.value()).thenReturn("'I' == 'I'");
         target.initialize(annotation);
         Assertions.assertTrue(target.isValid(null, context));
@@ -57,7 +56,6 @@ class ExpressionValidatorTest {
 
     @Test
     void testNumericComparison() {
-        target = new ExpressionValidator();
         Mockito.when(annotation.value()).thenReturn("self.smaller lt self.larger");
         Map<String, Integer> data = new HashMap<>();
         data.put("smaller", 1);
@@ -66,5 +64,13 @@ class ExpressionValidatorTest {
         Assertions.assertTrue(target.isValid(data, context));
     }
 
-
+    @Test
+    void testDateComparison() {
+        Mockito.when(annotation.value()).thenReturn("self.earlier lt self.later");
+        Map<String, Date> data = new HashMap<>();
+        data.put("earlier", new Date(1));
+        data.put("later", new Date());
+        target.initialize(annotation);
+        Assertions.assertTrue(target.isValid(data, context));
+    }
 }
