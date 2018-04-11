@@ -48,6 +48,7 @@ class ExpressionValidatorTest {
     @BeforeEach
     void initialize() {
         target = new ExpressionValidator();
+        Mockito.when(annotation.node()).thenReturn("");
     }
 
     @Test
