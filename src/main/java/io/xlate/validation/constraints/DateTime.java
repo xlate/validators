@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import io.xlate.validation.constraintvalidation.DateTimeValidator;
+import io.xlate.validation.internal.constraintvalidators.DateTimeValidator;
 
 /**
  * The annotated element value must contain characters valid for the given

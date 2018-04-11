@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (C) 2018 xlate.io LLC, http://www.xlate.io
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
@@ -33,6 +33,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.xlate.validation.constraints.Expression;
+import io.xlate.validation.internal.constraintvalidators.ExpressionValidator;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -83,6 +84,16 @@ class ExpressionValidatorTest {
     @Test
     void testDateComparison() {
         Mockito.when(annotation.value()).thenReturn("self.earlier lt self.later");
+        Map<String, Date> data = new HashMap<>();
+        data.put("earlier", new Date(1));
+        data.put("later", new Date());
+        target.initialize(annotation);
+        Assertions.assertTrue(target.isValid(data, context));
+    }
+
+    @Test
+    void testDivision() {
+        Mockito.when(annotation.value()).thenReturn("3 div 4 eq 0.75");
         Map<String, Date> data = new HashMap<>();
         data.put("earlier", new Date(1));
         data.put("later", new Date());

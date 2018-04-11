@@ -14,46 +14,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.xlate.validation.constraintvalidation;
+package io.xlate.validation.internal.constraintvalidators;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
+import javax.el.ELProcessor;
+import javax.validation.ConstraintDefinitionException;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import io.xlate.validation.constraints.DateTime;
+import io.xlate.validation.constraints.Expression;
 
-public class DateTimeValidator implements ConstraintValidator<DateTime, CharSequence> {
+public class ExpressionValidator implements ConstraintValidator<Expression, Object> {
 
-    private DateTime annotation;
+    private Expression annotation;
 
     @Override
-    public void initialize(DateTime constraintAnnotation) {
+    public void initialize(Expression constraintAnnotation) {
         annotation = constraintAnnotation;
     }
 
     @Override
-    public boolean isValid(CharSequence sequence, ConstraintValidatorContext context) {
-        if (sequence == null || sequence.length() == 0) {
-            return true;
+    public boolean isValid(Object target, ConstraintValidatorContext context) {
+        String expression = annotation.value();
+        ELProcessor processor = new ELProcessor();
+        processor.defineBean("self", target);
+
+        Object result = processor.eval(annotation.value());
+
+        if (result instanceof Boolean) {
+            return (Boolean) result;
         }
 
-        final String value = sequence.toString();
-
-        for (String pattern : annotation.patterns()) {
-            final DateFormat format = new SimpleDateFormat(pattern);
-            format.setLenient(annotation.lenient());
-
-            try {
-                format.parse(value);
-                return true;
-            } catch (@SuppressWarnings("unused") ParseException e) {
-                continue;
-            }
-
-        }
-        return false;
+        throw new ConstraintDefinitionException("Expression `" + expression + "` does evaluate to Boolean");
     }
 }
