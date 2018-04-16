@@ -1,25 +1,28 @@
 /*******************************************************************************
  * Copyright (C) 2018 xlate.io LLC, http://www.xlate.io
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published
- * by the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package io.xlate.validation.constraintvalidation;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.validation.ConstraintDefinitionException;
 import javax.validation.ConstraintValidatorContext;
 
 import org.junit.jupiter.api.Assertions;
@@ -41,9 +44,11 @@ class ExpressionValidatorTest {
 
     ExpressionValidator target;
 
-    @Mock ConstraintValidatorContext context;
+    @Mock
+    ConstraintValidatorContext context;
 
-    @Mock Expression annotation;
+    @Mock
+    Expression annotation;
 
     @BeforeEach
     void initialize() {
@@ -100,5 +105,15 @@ class ExpressionValidatorTest {
         data.put("later", new Date());
         target.initialize(annotation);
         Assertions.assertTrue(target.isValid(data, context));
+    }
+
+    @Test
+    void testNonBoolean() {
+        Mockito.when(annotation.value()).thenReturn("'a string, not a Boolean'");
+        Map<String, Date> data = new HashMap<>();
+        target.initialize(annotation);
+        assertThrows(ConstraintDefinitionException.class, () -> {
+            target.isValid(data, context);
+        }, "a message");
     }
 }
