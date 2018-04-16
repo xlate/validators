@@ -5,6 +5,7 @@
 	<groupId>io.xlate</groupId>
 	<artifactId>validators</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
+
 	<name>Additional Bean Validators for Java</name>
 	<description>Additional validators and annotations for use with Java Bean Validation (JSR-303)</description>
 	<url>https://github.com/xlate/validators</url>
@@ -23,17 +24,23 @@
 
 	<licenses>
 		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<name>GNU AFFERO GENERAL PUBLIC LICENSE v3</name>
+			<url>http://www.fsf.org/licensing/licenses/agpl-3.0.html</url>
 			<distribution>repo</distribution>
-			<comments>A business-friendly OSS license</comments>
+			<comments>OSS use license</comments>
+		</license>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<distribution>repo</distribution>
+			<comments>Commercial use license</comments>
 		</license>
 	</licenses>
 
 	<developers>
 		<developer>
 			<name>Michael Edgar</name>
-			<organizationUrl>https://www.xlate.io/</organizationUrl>
+			<organizationUrl>http://www.xlate.io/</organizationUrl>
 		</developer>
 	</developers>
 
