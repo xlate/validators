@@ -41,6 +41,7 @@ class ExpressionValidatorIT {
     TestBean bean;
 
     @Expression(value = "self.value1 ne self.value2", node = "value2")
+    @Expression(value = "self.value2 ne 'illegal-value'", message = "value2 must be legal")
     public static class TestBean {
         @Expression("self ne 'illegal-value'")
         private String value1;
@@ -84,5 +85,14 @@ class ExpressionValidatorIT {
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
         Assertions.assertTrue(violations.size() == 1);
         Assertions.assertEquals("value2", violations.iterator().next().getPropertyPath().toString());
+    }
+
+    @Test
+    void testValue2InvalidFromBeanLevelWithoutNodeSpecified() {
+        bean.value2 = "illegal-value";
+        Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
+        Assertions.assertTrue(violations.size() == 1);
+        Assertions.assertEquals("", violations.iterator().next().getPropertyPath().toString());
+        Assertions.assertEquals("value2 must be legal", violations.iterator().next().getMessage());
     }
 }
