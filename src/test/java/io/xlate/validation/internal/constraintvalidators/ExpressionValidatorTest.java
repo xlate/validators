@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.xlate.validation.constraintvalidation;
+package io.xlate.validation.internal.constraintvalidators;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -117,6 +117,14 @@ class ExpressionValidatorTest {
         target.initialize(annotation);
         assertThrows(ConstraintDefinitionException.class, () -> {
             target.isValid(data, context);
-        }, "a message");
+        });
+    }
+
+    @Test
+    void testPrimitiveIntArray() {
+        Mockito.when(annotation.value()).thenReturn("self[0] lt self[1]");
+        int[] data = { 0, 1 };
+        target.initialize(annotation);
+        Assertions.assertTrue(target.isValid(data, context));
     }
 }
