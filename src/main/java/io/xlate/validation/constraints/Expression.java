@@ -25,6 +25,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -44,6 +45,7 @@ import io.xlate.validation.internal.constraintvalidators.ExpressionValidator;
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = { ExpressionValidator.class })
+@Repeatable(Expression.List.class)
 public @interface Expression {
 
     String message() default "expression `{value}` does not evaluate to true";
@@ -59,4 +61,16 @@ public @interface Expression {
     String value();
 
     String node() default "";
+
+    /**
+     * Defines several {@link Expression} annotations on the same element.
+     *
+     * @see io.xlate.validation.constraints.Expression
+     */
+    @Target({ TYPE, METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
+    @Retention(RUNTIME)
+    @Documented
+    @interface List {
+        Expression[] value();
+    }
 }

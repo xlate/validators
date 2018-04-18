@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (C) 2018 xlate.io LLC, http://www.xlate.io
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
@@ -24,6 +24,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -49,6 +50,7 @@ import io.xlate.validation.internal.constraintvalidators.DateTimeValidator;
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = { DateTimeValidator.class })
+@Repeatable(DateTime.List.class)
 public @interface DateTime {
 
     String message();
@@ -66,4 +68,16 @@ public @interface DateTime {
      * @return lenient whether the parsing mode should be lenient
      */
     boolean lenient() default false;
+
+    /**
+     * Defines several {@link DateTime} annotations on the same element.
+     *
+     * @see io.xlate.validation.constraints.DateTime
+     */
+    @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
+    @Retention(RUNTIME)
+    @Documented
+    @interface List {
+        DateTime[] value();
+    }
 }
