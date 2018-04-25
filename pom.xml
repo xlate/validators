@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.xlate</groupId>
 	<artifactId>validators</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 
 	<name>Additional Bean Validators for Java</name>
 	<description>Additional validators and annotations for use with Java Bean Validation (JSR-303)</description>
