@@ -36,12 +36,12 @@ import io.xlate.validation.internal.constraintvalidators.DateTimeValidator;
 /**
  * The annotated element value must contain characters valid for the given
  * patterns. The value must be able to be parsed.
- * <p/>
+ * <p>
  * Supported types are:
  * <ul>
  * <li>{@code CharSequence}</li>
  * </ul>
- * <p/>
+ * <p>
  * {@code null} elements are considered valid.
  *
  * @author Michael Edgar
