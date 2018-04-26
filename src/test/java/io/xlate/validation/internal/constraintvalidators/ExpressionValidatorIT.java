@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,8 +38,6 @@ import io.xlate.validation.constraints.Expression;
 class ExpressionValidatorIT {
 
     Validator validator;
-
-    TestBean bean;
 
     @Expression(value = "self.value1 ne self.value2", node = "value2")
     @Expression(value = "self.value2 ne 'illegal-value'", message = "value2 must be legal")
@@ -57,14 +56,33 @@ class ExpressionValidatorIT {
         }
     }
 
+    @Expression(
+            value = "self.newPassword eq self.newPasswordConfirmation",
+            node = "newPasswordConfirmation",
+            message = "Password confirmation must match new password")
+    public static class PasswordBean {
+        @NotNull
+        private String newPassword;
+        @NotNull
+        private String newPasswordConfirmation;
+
+        public String getNewPassword() {
+            return newPassword;
+        }
+
+        public String getNewPasswordConfirmation() {
+            return newPasswordConfirmation;
+        }
+    }
+
     @BeforeEach
     void initialize() {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
-        bean = new TestBean();
     }
 
     @Test
     void testValue1EqualsIllegalValue() {
+        TestBean bean = new TestBean();
         bean.value1 = "illegal-value";
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
         Assertions.assertTrue(violations.size() == 1);
@@ -73,6 +91,7 @@ class ExpressionValidatorIT {
 
     @Test
     void testValue1EqualsLegalValue() {
+        TestBean bean = new TestBean();
         bean.value1 = "legal-value";
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
         Assertions.assertTrue(violations.size() == 0);
@@ -80,6 +99,7 @@ class ExpressionValidatorIT {
 
     @Test
     void testBeanValuesEqualInvalid() {
+        TestBean bean = new TestBean();
         bean.value1 = "legal-value";
         bean.value2 = "legal-value";
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
@@ -89,10 +109,32 @@ class ExpressionValidatorIT {
 
     @Test
     void testValue2InvalidFromBeanLevelWithoutNodeSpecified() {
+        TestBean bean = new TestBean();
         bean.value2 = "illegal-value";
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
         Assertions.assertTrue(violations.size() == 1);
         Assertions.assertEquals("", violations.iterator().next().getPropertyPath().toString());
         Assertions.assertEquals("value2 must be legal", violations.iterator().next().getMessage());
+    }
+
+    @Test
+    void testPasswordValuesMatch() {
+        PasswordBean bean = new PasswordBean();
+        bean.newPassword = "newvalue";
+        bean.newPasswordConfirmation = "newvalue";
+        Set<ConstraintViolation<PasswordBean>> violations = validator.validate(bean);
+        Assertions.assertTrue(violations.size() == 0);
+    }
+
+    @Test
+    void testPasswordValuesNotMatch() {
+        PasswordBean bean = new PasswordBean();
+        bean.newPassword = "newvalue";
+        bean.newPasswordConfirmation = "newvalue1";
+        Set<ConstraintViolation<PasswordBean>> violations = validator.validate(bean);
+        Assertions.assertTrue(violations.size() == 1);
+        Assertions.assertEquals("newPasswordConfirmation", violations.iterator().next().getPropertyPath().toString());
+        Assertions.assertEquals("Password confirmation must match new password",
+                                violations.iterator().next().getMessage());
     }
 }
