@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javax.validation.ConstraintDefinitionException;
+import javax.validation.ConstraintDeclarationException;
 import javax.validation.ConstraintValidatorContext;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,7 @@ class DateTimeValidatorTest {
     @Test
     void testMissingPatterns() {
         Mockito.when(annotation.patterns()).thenReturn(new String[0]);
-        ConstraintDefinitionException ex = assertThrows(ConstraintDefinitionException.class, () -> {
+        ConstraintDeclarationException ex = assertThrows(ConstraintDeclarationException.class, () -> {
             target.initialize(annotation);
         });
         assertEquals("At least one DateFormat pattern must be provided.", ex.getMessage());
@@ -50,7 +50,7 @@ class DateTimeValidatorTest {
     @Test
     void testInvalidPattern() {
         Mockito.when(annotation.patterns()).thenReturn(new String[] { " NOT A VALID DATE PATTERN " });
-        ConstraintDefinitionException ex = assertThrows(ConstraintDefinitionException.class, () -> {
+        ConstraintDeclarationException ex = assertThrows(ConstraintDeclarationException.class, () -> {
             target.initialize(annotation);
         });
         assertTrue(ex.getMessage().startsWith("Invalid format pattern "));

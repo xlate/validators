@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.ConstraintDefinitionException;
+import javax.validation.ConstraintDeclarationException;
 import javax.validation.ConstraintValidatorContext;
 
 import org.junit.jupiter.api.Assertions;
@@ -38,7 +38,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import io.xlate.validation.constraints.Expression;
-import io.xlate.validation.internal.constraintvalidators.ExpressionValidator;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -115,7 +114,7 @@ class ExpressionValidatorTest {
         Mockito.when(annotation.value()).thenReturn("'a string, not a Boolean'");
         Map<String, Date> data = new HashMap<>();
         target.initialize(annotation);
-        assertThrows(ConstraintDefinitionException.class, () -> {
+        assertThrows(ConstraintDeclarationException.class, () -> {
             target.isValid(data, context);
         });
     }

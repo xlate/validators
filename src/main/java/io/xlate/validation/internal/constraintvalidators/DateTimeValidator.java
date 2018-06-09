@@ -20,7 +20,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import javax.validation.ConstraintDefinitionException;
+import javax.validation.ConstraintDeclarationException;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -37,7 +37,7 @@ public class DateTimeValidator implements ConstraintValidator<DateTime, CharSequ
         final String[] patterns = annotation.patterns();
 
         if (patterns.length == 0) {
-            throw new ConstraintDefinitionException("At least one DateFormat pattern must be provided.");
+            throw new ConstraintDeclarationException("At least one DateFormat pattern must be provided.");
         }
 
         for (String pattern : patterns) {
@@ -45,7 +45,7 @@ public class DateTimeValidator implements ConstraintValidator<DateTime, CharSequ
                 @SuppressWarnings("unused")
                 Object format = new SimpleDateFormat(pattern);
             } catch (IllegalArgumentException e) {
-                throw new ConstraintDefinitionException("Invalid format pattern `" + pattern + "`");
+                throw new ConstraintDeclarationException("Invalid format pattern `" + pattern + "`", e);
             }
         }
     }

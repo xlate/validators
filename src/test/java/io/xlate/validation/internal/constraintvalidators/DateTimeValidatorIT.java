@@ -43,7 +43,7 @@ class DateTimeValidatorIT {
         public Date getIsoDate() {
             try {
                 return new SimpleDateFormat("yyyy-MM-dd").parse(isoDate);
-            } catch (ParseException e) {
+            } catch (@SuppressWarnings("unused") ParseException e) {
                 // Exception not possible after validation performed
             }
             return null;

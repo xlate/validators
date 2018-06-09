@@ -17,7 +17,7 @@
 package io.xlate.validation.internal.constraintvalidators;
 
 import javax.el.ELProcessor;
-import javax.validation.ConstraintDefinitionException;
+import javax.validation.ConstraintDeclarationException;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -38,7 +38,7 @@ public class ExpressionValidator implements ConstraintValidator<Expression, Obje
         ELProcessor processor = new ELProcessor();
         processor.defineBean("self", target);
 
-        Object result = processor.eval(annotation.value());
+        Object result = processor.eval(expression);
 
         if (result instanceof Boolean) {
             String nodeName = annotation.node();
@@ -53,6 +53,6 @@ public class ExpressionValidator implements ConstraintValidator<Expression, Obje
             return (Boolean) result;
         }
 
-        throw new ConstraintDefinitionException("Expression `" + expression + "` does not evaluate to Boolean");
+        throw new ConstraintDeclarationException("Expression `" + expression + "` does not evaluate to Boolean");
     }
 }
