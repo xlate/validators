@@ -86,9 +86,12 @@ public @interface JdbcStatement {
     String[] parameters() default {};
 
     /**
-     * The name of the resource to be used to obtain a {@link Connection}. It can
-     * link to any compatible {@link DataSource} using the global JNDI names.
+     * The JNDI lookup name of the resource to be used to obtain a
+     * {@link Connection}. It can link to any compatible {@link DataSource}
+     * using the global JNDI names.
      *
+     * @return the JNDI lookup name of the resource to be used to obtain a
+     *         {@link Connection}
      */
     String dataSourceLookup() default "";
 
