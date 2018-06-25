@@ -55,6 +55,7 @@ class ExpressionValidatorTest {
     @BeforeEach
     void setUp() {
         target = new ExpressionValidator();
+        Mockito.when(annotation.when()).thenReturn("");
         Mockito.when(annotation.node()).thenReturn("");
     }
 
@@ -125,5 +126,41 @@ class ExpressionValidatorTest {
         int[] data = { 0, 1 };
         target.initialize(annotation);
         Assertions.assertTrue(target.isValid(data, context));
+    }
+
+    @Test
+    void testDateComparisonWhenConditionTrue() {
+        Mockito.when(annotation.value()).thenReturn("self.earlier lt self.later");
+        Mockito.when(annotation.when()).thenReturn("self.earlier.time eq 5");
+        Map<String, Date> data = new HashMap<>();
+        data.put("earlier", new Date(5));
+        data.put("later", new Date());
+        target.initialize(annotation);
+        Assertions.assertTrue(target.isValid(data, context));
+    }
+
+    @Test
+    void testDateComparisonWhenConditionFalse() {
+        Mockito.when(annotation.value()).thenReturn("self.earlier lt self.later");
+        Mockito.when(annotation.when()).thenReturn("self.earlier.time ne 1");
+        Map<String, Date> data = new HashMap<>();
+        data.put("earlier", new Date(1));
+        data.put("later", new Date());
+        target.initialize(annotation);
+        Assertions.assertTrue(target.isValid(data, context));
+    }
+
+    @Test
+    void testNonBooleanInWhenCondition() {
+        Mockito.when(annotation.value()).thenReturn("self.earlier lt self.later");
+        Mockito.when(annotation.when()).thenReturn("'0'");
+        Map<String, Date> data = new HashMap<>();
+        data.put("earlier", new Date(1));
+        data.put("later", new Date());
+        target.initialize(annotation);
+        ConstraintDeclarationException ex = assertThrows(ConstraintDeclarationException.class, () -> {
+            target.isValid(data, context);
+        });
+        Assertions.assertTrue(ex.getMessage().contains("`'0'` does not evaluate to Boolean"));
     }
 }

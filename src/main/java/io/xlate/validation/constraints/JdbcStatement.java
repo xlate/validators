@@ -86,6 +86,18 @@ public @interface JdbcStatement {
     String[] parameters() default {};
 
     /**
+     * An EL expression used to determine if the expression given by
+     * {@link #value()} should be checked. This expression is available to
+     * short-circuit the constraint validation of this {@link Expression} in
+     * scenarios when it should not apply, e.g. a value is null and the
+     * constraint only applies to non-null values.
+     *
+     * @return the expression to evaluate to determine whether the constraint
+     *         should be checked
+     */
+    String when() default "";
+
+    /**
      * The JNDI lookup name of the resource to be used to obtain a
      * {@link Connection}. It can link to any compatible {@link DataSource}
      * using the global JNDI names.

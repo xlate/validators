@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.el.ELProcessor;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -23,16 +24,20 @@ import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
 import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
 import javax.validation.ValidationException;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
+
+import io.xlate.validation.constraints.JdbcStatement;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -40,9 +45,37 @@ class JdbcStatementValidatorTest {
 
     JdbcStatementValidator target;
 
+    @Mock
+    ConstraintValidatorContext constraintContext;
+
     @BeforeEach
     void setUp() {
         target = new JdbcStatementValidator();
+    }
+
+    @Test
+    void testWhenExpessionFalse() throws NamingException {
+        JdbcStatement annotation = Mockito.mock(JdbcStatement.class);
+        Mockito.when(annotation.value()).thenReturn("SELECT 1");
+        Mockito.when(annotation.when()).thenReturn("0 == 1");
+        Mockito.when(annotation.dataSourceLookup()).thenReturn("");
+
+        DataSource dataSource = Mockito.mock(DataSource.class);
+        System.setProperty("java.naming.factory.initial", "org.osjava.sj.SimpleContextFactory");
+        System.setProperty("org.osjava.sj.jndi.shared", "true");
+        System.setProperty("org.osjava.sj.delimiter", "/");
+
+        Context context = new InitialContext();
+        context.createSubcontext("java:");
+        context.createSubcontext("java:comp");
+        context.bind("java:comp/DefaultDataSource", dataSource);
+
+        try {
+            target.initialize(annotation);
+            Assertions.assertTrue(target.isValid(new Object(), constraintContext));
+        } finally {
+            context.close();
+        }
     }
 
     @Test
@@ -110,7 +143,6 @@ class JdbcStatementValidatorTest {
 
     @Test
     void testExecuteQuerySucceeds() throws SQLException {
-        Object self = new Object();
         String sql = "SELECT 1";
         String[] parameters = { };
 
@@ -126,19 +158,18 @@ class JdbcStatementValidatorTest {
         Mockito.when(results.next()).thenReturn(true);
 
         target.dataSource = dataSource;
-        assertTrue(target.executeQuery(self, sql, parameters));
+        assertTrue(target.executeQuery(null, sql, parameters));
     }
 
     @Test
     void testExecuteQueryThrowsValidationException() throws SQLException {
-        Object self = new Object();
         DataSource dataSource = Mockito.mock(DataSource.class);
         String sql = "SELECT 1";
         String[] parameters = { };
         Mockito.when(dataSource.getConnection()).thenThrow(SQLException.class);
         target.dataSource = dataSource;
         ValidationException ex = assertThrows(ValidationException.class, () -> {
-            target.executeQuery(self, sql, parameters);
+            target.executeQuery(null, sql, parameters);
         });
 
         Throwable cause = ex.getCause();
@@ -149,7 +180,6 @@ class JdbcStatementValidatorTest {
     @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
     void testSetParametersNoParameters() throws SQLException {
-        Object self = new Object();
         String[] parameters = { };
         PreparedStatement statement = Mockito.mock(PreparedStatement.class);
         final AtomicInteger callCount = new AtomicInteger(0);
@@ -159,7 +189,7 @@ class JdbcStatementValidatorTest {
             return null;
         }).when(statement).setObject(1, Object.class);
 
-        target.setParameters(self, parameters, statement);
+        target.setParameters(null, parameters, statement);
         assertEquals(0, callCount.get());
     }
 
@@ -190,7 +220,10 @@ class JdbcStatementValidatorTest {
             return null;
         }).when(statement).setObject(2, self.getValue2());
 
-        target.setParameters(self, parameters, statement);
+        ELProcessor processor = new ELProcessor();
+        processor.defineBean("self", self);
+
+        target.setParameters(processor, parameters, statement);
         assertEquals(2, callCount.get());
     }
 
@@ -211,8 +244,11 @@ class JdbcStatementValidatorTest {
         String[] parameters = { "self.value1", "self.value2" };
         PreparedStatement statement = Mockito.mock(PreparedStatement.class);
 
+        ELProcessor processor = new ELProcessor();
+        processor.defineBean("self", self);
+
         ConstraintDeclarationException ex = assertThrows(ConstraintDeclarationException.class, () -> {
-            target.setParameters(self, parameters, statement);
+            target.setParameters(processor, parameters, statement);
         });
 
         Throwable cause = ex.getCause();
@@ -229,10 +265,12 @@ class JdbcStatementValidatorTest {
         TestSetParametersSQLException self = new TestSetParametersSQLException();
         String[] parameters = { "self" };
         PreparedStatement statement = Mockito.mock(PreparedStatement.class);
+        ELProcessor processor = new ELProcessor();
+        processor.defineBean("self", self);
 
         ConstraintDeclarationException ex = assertThrows(ConstraintDeclarationException.class, () -> {
             Mockito.doThrow(java.sql.SQLException.class).when(statement).setObject(1, self);
-            target.setParameters(self, parameters, statement);
+            target.setParameters(processor, parameters, statement);
         });
 
         Throwable cause = ex.getCause();

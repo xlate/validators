@@ -32,7 +32,7 @@ import javax.validation.ValidationException;
 
 import io.xlate.validation.constraints.JdbcStatement;
 
-public class JdbcStatementValidator implements ConstraintValidator<JdbcStatement, Object> {
+public class JdbcStatementValidator implements BooleanExpression, ConstraintValidator<JdbcStatement, Object> {
 
     JdbcStatement annotation;
     DataSource dataSource;
@@ -47,7 +47,22 @@ public class JdbcStatementValidator implements ConstraintValidator<JdbcStatement
     public boolean isValid(Object target, ConstraintValidatorContext context) {
         final String sql = annotation.value();
         final String[] parameters = annotation.parameters();
-        final boolean valid = executeQuery(target, sql, parameters);
+        final String when = annotation.when();
+        final ELProcessor processor;
+
+        if (!when.isEmpty() || parameters.length > 0) {
+            processor = new ELProcessor();
+            processor.defineBean("self", target);
+
+            if (!evaluate(processor, when)) {
+                // Validation does not apply based on 'when' condition
+                return true;
+            }
+        } else {
+            processor = null;
+        }
+
+        final boolean valid = executeQuery(processor, sql, parameters);
 
         if (!valid) {
             updateValidationContext(context, annotation.node(), annotation.message());
@@ -72,12 +87,12 @@ public class JdbcStatementValidator implements ConstraintValidator<JdbcStatement
         return dataSource;
     }
 
-    boolean executeQuery(Object target, String sql, String[] parameters) {
+    boolean executeQuery(ELProcessor processor, String sql, String[] parameters) {
         final boolean valid;
 
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                setParameters(target, parameters, statement);
+                setParameters(processor, parameters, statement);
 
                 try (ResultSet results = statement.executeQuery()) {
                     valid = results.next();
@@ -90,13 +105,11 @@ public class JdbcStatementValidator implements ConstraintValidator<JdbcStatement
         return valid;
     }
 
-    void setParameters(Object target, String[] parameters, PreparedStatement statement) {
+    void setParameters(ELProcessor processor, String[] parameters, PreparedStatement statement) {
         if (parameters.length == 0) {
             return;
         }
 
-        ELProcessor processor = new ELProcessor();
-        processor.defineBean("self", target);
         int p = 0;
 
         for (String parameterExpression : parameters) {

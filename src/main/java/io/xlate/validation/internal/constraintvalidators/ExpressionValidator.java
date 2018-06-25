@@ -17,13 +17,12 @@
 package io.xlate.validation.internal.constraintvalidators;
 
 import javax.el.ELProcessor;
-import javax.validation.ConstraintDeclarationException;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import io.xlate.validation.constraints.Expression;
 
-public class ExpressionValidator implements ConstraintValidator<Expression, Object> {
+public class ExpressionValidator implements BooleanExpression, ConstraintValidator<Expression, Object> {
 
     private Expression annotation;
 
@@ -34,13 +33,14 @@ public class ExpressionValidator implements ConstraintValidator<Expression, Obje
 
     @Override
     public boolean isValid(Object target, ConstraintValidatorContext context) {
-        String expression = annotation.value();
         ELProcessor processor = new ELProcessor();
         processor.defineBean("self", target);
 
-        Object result = processor.eval(expression);
+        if (!evaluate(processor, annotation.when())) {
+            return true;
+        }
 
-        if (result instanceof Boolean) {
+        if (!evaluate(processor, annotation.value())) {
             String nodeName = annotation.node();
 
             if (!nodeName.isEmpty()) {
@@ -50,9 +50,9 @@ public class ExpressionValidator implements ConstraintValidator<Expression, Obje
                        .addConstraintViolation();
             }
 
-            return (Boolean) result;
+            return false;
         }
 
-        throw new ConstraintDeclarationException("Expression `" + expression + "` does not evaluate to Boolean");
+        return true;
     }
 }

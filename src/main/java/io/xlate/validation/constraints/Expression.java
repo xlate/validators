@@ -30,6 +30,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
+import javax.validation.ConstraintViolation;
 import javax.validation.Payload;
 
 import io.xlate.validation.internal.constraintvalidators.ExpressionValidator;
@@ -60,6 +61,25 @@ public @interface Expression {
      */
     String value();
 
+    /**
+     * An EL expression used to determine if the expression given by
+     * {@link #value()} should be checked. This expression is available to
+     * short-circuit the constraint validation of this {@link Expression} in
+     * scenarios when it should not apply, e.g. a value is null and the
+     * constraint only applies to non-null values.
+     *
+     * @return the expression to evaluate to determine whether the constraint
+     *         should be checked
+     */
+    String when() default "";
+
+    /**
+     * Name of the node to be identified in a {@link ConstraintViolation} should
+     * validation fail.
+     *
+     * @return the name of the node to be identified in a
+     *         {@link ConstraintViolation} should validation fail.
+     */
     String node() default "";
 
     /**
