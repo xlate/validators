@@ -1,6 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.xlate</groupId>
   <artifactId>validators</artifactId>
@@ -77,7 +77,7 @@
     <dependency>
       <groupId>jakarta.el</groupId>
       <artifactId>jakarta.el-api</artifactId>
-      <version>3.0.2</version>
+      <version>3.0.3</version>
       <optional>true</optional>
     </dependency>
 
@@ -100,9 +100,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
+      <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>6.1.0.Final</version>
+      <version>6.1.1.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -149,36 +149,6 @@
       </plugins>
     </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default-compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <inherited>false</inherited>
-            <configuration>
-              <release>8</release>
-            </configuration>
-          </execution>
-          <!-- <execution>
-            <id>jdk9</id>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <configuration>
-              <release>9</release>
-              <compileSourceRoots>
-                <compileSourceRoot>${project.basedir}/src/main/java9</compileSourceRoot>
-              </compileSourceRoots>
-              <multiReleaseOutput>true</multiReleaseOutput>
-            </configuration>
-          </execution> -->
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -335,10 +305,35 @@
       </build>
     </profile>
     <profile>
-      <id>java9</id>
+      <id>multirelease</id>
       <activation>
         <jdk>[9,)</jdk>
       </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>default-compile</id>
+                  <phase>compile</phase>
+                  <goals>
+                    <goal>compile</goal>
+                  </goals>
+                  <inherited>false</inherited>
+                  <configuration>
+                    <release>8</release>
+                  </configuration>
+                </execution>
+                <!-- <execution> <id>module-compile</id> <goals> <goal>compile</goal> </goals> <configuration> <release>9</release> <compileSourceRoots> <compileSourceRoot>${project.basedir}/src/main/java9</compileSourceRoot>
+                  </compileSourceRoots> <multiReleaseOutput>true</multiReleaseOutput> </configuration> </execution> -->
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
       <properties>
         <!-- For surefire tests -->
         <argLine>--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED</argLine>

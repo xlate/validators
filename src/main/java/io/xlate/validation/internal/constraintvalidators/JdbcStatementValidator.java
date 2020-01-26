@@ -71,20 +71,20 @@ public class JdbcStatementValidator implements BooleanExpression, ConstraintVali
         return valid;
     }
 
-    DataSource getDataSource(String dataSourceLookup) {
-        final DataSource dataSource;
+    static DataSource getDataSource(String dataSourceLookup) {
+        final DataSource source;
 
         try {
             if (dataSourceLookup.isEmpty()) {
-                dataSource = InitialContext.doLookup("java:comp/DefaultDataSource");
+                source = InitialContext.doLookup("java:comp/DefaultDataSource");
             } else {
-                dataSource = InitialContext.doLookup(dataSourceLookup);
+                source = InitialContext.doLookup(dataSourceLookup);
             }
         } catch (NamingException e) {
             throw new ValidationException("DataSource not found", e);
         }
 
-        return dataSource;
+        return source;
     }
 
     boolean executeQuery(ELProcessor processor, String sql, String[] parameters) {

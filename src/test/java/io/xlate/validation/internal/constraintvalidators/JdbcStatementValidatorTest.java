@@ -89,7 +89,7 @@ class JdbcStatementValidatorTest {
         context.createSubcontext("java:comp");
         context.bind("java:comp/DefaultDataSource", dataSource);
         try {
-            assertEquals(dataSource, target.getDataSource(""));
+            assertEquals(dataSource, JdbcStatementValidator.getDataSource(""));
         } finally {
             context.close();
         }
@@ -109,7 +109,7 @@ class JdbcStatementValidatorTest {
         String lookup = "java:comp/env/jdbc/testDataSource";
         context.bind(lookup, dataSource);
         try {
-            assertEquals(dataSource, target.getDataSource(lookup));
+            assertEquals(dataSource, JdbcStatementValidator.getDataSource(lookup));
         } finally {
             context.close();
         }
@@ -130,7 +130,7 @@ class JdbcStatementValidatorTest {
         ValidationException ex;
         try {
             ex = assertThrows(ValidationException.class, () -> {
-                target.getDataSource(lookup);
+                JdbcStatementValidator.getDataSource(lookup);
             });
         } finally {
             context.close();
