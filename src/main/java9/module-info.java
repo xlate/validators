@@ -1,5 +1,6 @@
 /*module io.xlate.validation {
     exports io.xlate.validation.constraints;
+    opens   io.xlate.validation.internal.constraintvalidators;
 
     requires jakarta.el.api;
     requires java.instrument;
