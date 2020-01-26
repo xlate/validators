@@ -19,6 +19,8 @@ package io.xlate.validation.internal.constraintvalidators;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.ConstraintDeclarationException;
 import javax.validation.ConstraintValidator;
@@ -28,22 +30,24 @@ import io.xlate.validation.constraints.DateTime;
 
 public class DateTimeValidator implements ConstraintValidator<DateTime, CharSequence> {
 
-    private DateTime annotation;
+    private List<DateFormat> formats;
 
     @Override
     public void initialize(DateTime constraintAnnotation) {
-        annotation = constraintAnnotation;
-
+        final DateTime annotation = constraintAnnotation;
         final String[] patterns = annotation.patterns();
 
         if (patterns.length == 0) {
             throw new ConstraintDeclarationException("At least one DateFormat pattern must be provided.");
         }
 
+        formats = new ArrayList<>(patterns.length);
+
         for (String pattern : patterns) {
             try {
-                @SuppressWarnings("unused")
-                Object format = new SimpleDateFormat(pattern);
+                DateFormat format = new SimpleDateFormat(pattern);
+                format.setLenient(annotation.lenient());
+                formats.add(format);
             } catch (IllegalArgumentException e) {
                 throw new ConstraintDeclarationException("Invalid format pattern `" + pattern + "`", e);
             }
@@ -58,16 +62,15 @@ public class DateTimeValidator implements ConstraintValidator<DateTime, CharSequ
 
         final String value = sequence.toString();
 
-        for (String pattern : annotation.patterns()) {
-            final DateFormat format = new SimpleDateFormat(pattern);
-
-            format.setLenient(annotation.lenient());
+        for (DateFormat format : formats) {
+            // DateFormat is not thread-safe, clone a local copy before use.
+            final DateFormat localFormat = (DateFormat) format.clone();
 
             try {
-                format.parse(value);
+                localFormat.parse(value);
                 return true;
             } catch (@SuppressWarnings("unused") ParseException e) {
-                continue;
+                // Value does not match the pattern, ignore and continue.
             }
         }
 
