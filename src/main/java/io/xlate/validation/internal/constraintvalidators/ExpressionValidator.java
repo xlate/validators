@@ -16,9 +16,9 @@
  ******************************************************************************/
 package io.xlate.validation.internal.constraintvalidators;
 
-import javax.el.ELProcessor;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.el.ELProcessor;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import io.xlate.validation.constraints.Expression;
 

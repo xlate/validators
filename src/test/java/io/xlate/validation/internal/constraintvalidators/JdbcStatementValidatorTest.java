@@ -1,6 +1,7 @@
 package io.xlate.validation.internal.constraintvalidators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,16 +14,10 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.el.ELProcessor;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import javax.validation.ConstraintDeclarationException;
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
-import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
-import javax.validation.ValidationException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +33,12 @@ import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 
 import io.xlate.validation.constraints.JdbcStatement;
+import jakarta.el.ELProcessor;
+import jakarta.validation.ConstraintDeclarationException;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
+import jakarta.validation.ValidationException;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -252,8 +253,8 @@ class JdbcStatementValidatorTest {
         });
 
         Throwable cause = ex.getCause();
-        assertTrue(cause != null);
-        assertEquals(javax.el.PropertyNotFoundException.class, cause.getClass());
+        assertNotNull(cause);
+        assertEquals(jakarta.el.PropertyNotFoundException.class, cause.getClass());
     }
 
     public static class TestSetParametersSQLException {

@@ -1,7 +1,7 @@
 package io.xlate.validation.internal.constraintvalidators;
 
-import javax.el.ELProcessor;
-import javax.validation.ConstraintDeclarationException;
+import jakarta.el.ELProcessor;
+import jakarta.validation.ConstraintDeclarationException;
 
 public interface BooleanExpression {
 

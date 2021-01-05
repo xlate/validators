@@ -1,8 +1,5 @@
-/*module io.xlate.validation {
-    exports io.xlate.validation.constraints;
-    opens   io.xlate.validation.internal.constraintvalidators;
+module io.xlate.validation {
 
-    requires jakarta.el.api;
     requires java.instrument;
     requires java.logging;
     requires java.management;
@@ -10,5 +7,12 @@
     requires java.prefs;
     requires java.sql;
     requires java.sql.rowset;
-    requires java.validation;
-}*/
+
+    requires static jakarta.el;
+    requires transitive jakarta.validation;
+
+    exports io.xlate.validation.constraints;
+
+    opens io.xlate.validation.internal.constraintvalidators;
+
+}

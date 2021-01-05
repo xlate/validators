@@ -32,11 +32,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import javax.sql.DataSource;
-import javax.validation.Constraint;
-import javax.validation.ConstraintViolation;
-import javax.validation.Payload;
 
 import io.xlate.validation.internal.constraintvalidators.JdbcStatementValidator;
+import jakarta.validation.Constraint;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Payload;
 
 /**
  * Constraint to execute a read-only JDBC statement (i.e., a query). By default,
