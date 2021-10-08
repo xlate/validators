@@ -51,6 +51,11 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
 
+    <!-- Sonar settings -->
+    <sonar.projectKey>xlate_validators</sonar.projectKey>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.organization>xlate</sonar.organization>
+
     <version.maven.compiler.plugin>3.8.1</version.maven.compiler.plugin>
     <version.maven.javadoc.plugin>3.3.1</version.maven.javadoc.plugin>
     <version.maven.release.plugin>2.5.3</version.maven.release.plugin>
