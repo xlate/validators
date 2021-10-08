@@ -26,8 +26,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,10 +37,10 @@ import jakarta.validation.ConstraintDeclarationException;
 import jakarta.validation.ConstraintValidatorContext;
 
 @ExtendWith(MockitoExtension.class)
-@RunWith(JUnitPlatform.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ExpressionValidatorTest {
 
+    static final String[] EMPTY_STRING_ARRAY = { };
     ExpressionValidator target;
 
     @Mock
@@ -56,6 +54,9 @@ class ExpressionValidatorTest {
         target = new ExpressionValidator();
         Mockito.when(annotation.when()).thenReturn("");
         Mockito.when(annotation.node()).thenReturn("");
+        Mockito.when(annotation.packageImports()).thenReturn(EMPTY_STRING_ARRAY);
+        Mockito.when(annotation.classImports()).thenReturn(EMPTY_STRING_ARRAY);
+        Mockito.when(annotation.staticImports()).thenReturn(EMPTY_STRING_ARRAY);
     }
 
     @Test

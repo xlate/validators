@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -41,7 +39,6 @@ import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.
 import jakarta.validation.ValidationException;
 
 @ExtendWith(MockitoExtension.class)
-@RunWith(JUnitPlatform.class)
 class JdbcStatementValidatorTest {
 
     JdbcStatementValidator target;

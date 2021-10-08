@@ -81,6 +81,12 @@ public @interface Expression {
      */
     String node() default "";
 
+    String[] packageImports() default {};
+
+    String[] classImports() default {};
+
+    String[] staticImports() default {};
+
     /**
      * Defines several {@link Expression} annotations on the same element.
      *

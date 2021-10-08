@@ -20,8 +20,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -33,7 +31,6 @@ import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 
 @ExtendWith(MockitoExtension.class)
-@RunWith(JUnitPlatform.class)
 class JdbcStatementValidatorIT {
 
     private static final String CUSTOM_DATASOURCE = "java:comp/env/jdbc/testDataSource";

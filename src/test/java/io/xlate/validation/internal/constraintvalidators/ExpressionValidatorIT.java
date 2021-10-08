@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.xlate.validation.constraints.Expression;
@@ -33,7 +31,6 @@ import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotNull;
 
 @ExtendWith(MockitoExtension.class)
-@RunWith(JUnitPlatform.class)
 class ExpressionValidatorIT {
 
     Validator validator;
@@ -56,7 +53,7 @@ class ExpressionValidatorIT {
     }
 
     @Expression(
-            value = "self.newPassword eq self.newPasswordConfirmation",
+            value = "this.newPassword eq self.newPasswordConfirmation",
             node = "newPasswordConfirmation",
             message = "Password confirmation must match new password")
     public static class PasswordBean {

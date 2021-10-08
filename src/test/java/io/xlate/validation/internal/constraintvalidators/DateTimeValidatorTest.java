@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,7 +18,6 @@ import jakarta.validation.ConstraintDeclarationException;
 import jakarta.validation.ConstraintValidatorContext;
 
 @ExtendWith(MockitoExtension.class)
-@RunWith(JUnitPlatform.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DateTimeValidatorTest {
 
