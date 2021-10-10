@@ -18,11 +18,12 @@ package io.xlate.validation.internal.constraintvalidators;
 
 import java.util.Arrays;
 
+import javax.el.ELProcessor;
+import javax.el.ImportHandler;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+
 import io.xlate.validation.constraints.Expression;
-import jakarta.el.ELProcessor;
-import jakarta.el.ImportHandler;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 
 public class ExpressionValidator implements BooleanExpression, ConstraintValidator<Expression, Object> {
 

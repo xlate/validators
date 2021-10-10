@@ -6,7 +6,7 @@ module io.xlate.validation {
     requires static java.sql;
 
     requires static jakarta.el;
-    requires transitive jakarta.validation;
+    requires transitive java.validation;
 
     exports io.xlate.validation.constraints;
 
