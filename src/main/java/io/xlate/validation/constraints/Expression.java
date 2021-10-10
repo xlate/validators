@@ -81,10 +81,49 @@ public @interface Expression {
      */
     String node() default "";
 
+    /**
+     * The name to be used within the {@link #value()} and {@link #when()}
+     * expressions to refer to the target of the {@link Expression @Expression}
+     * annotation.
+     *
+     * @return the name to use for binding the annotation target within
+     *         expressions
+     */
+    String targetName() default "self";
+
+    /**
+     * The packages to be imported to the EL context for evaluating the
+     * expressions in {@link #value()} and {@link #when()}. All classes in the
+     * package will be imported.
+     *
+     * @return the packages to be imported to the EL context during expression
+     *         evaluation
+     *
+     * @see jakarta.el.ImportHandler#importPackage(String)
+     */
     String[] packageImports() default {};
 
+    /**
+     * The classes to be imported to the EL context for evaluating the
+     * expressions in {@link #value()} and {@link #when()}.
+     *
+     * @return the classes to be imported to the EL context during expression
+     *         evaluation
+     *
+     * @see jakarta.el.ImportHandler#importClass(String)
+     */
     String[] classImports() default {};
 
+    /**
+     * The static member name, including the full class name, to be imported to
+     * the EL context for evaluating the expressions in {@link #value()} and
+     * {@link #when()}.
+     *
+     * @return the static member names to be imported to the EL context during
+     *         expression evaluation
+     *
+     * @see jakarta.el.ImportHandler#importStatic(String)
+     */
     String[] staticImports() default {};
 
     /**

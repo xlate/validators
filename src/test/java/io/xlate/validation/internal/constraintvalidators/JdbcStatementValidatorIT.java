@@ -1,5 +1,7 @@
 package io.xlate.validation.internal.constraintvalidators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -138,7 +140,7 @@ class JdbcStatementValidatorIT {
             statement.executeUpdate("INSERT INTO FIELD_1_TABLE (COL1) VALUES ('NOT value1')");
 
             Set<ConstraintViolation<TestBeanDefaultDataSource>> violations = validator.validate(bean);
-            Assertions.assertTrue(violations.size() == 1);
+            assertEquals(1, violations.size());
         } finally {
             try (Statement statement = getConnection().createStatement()) {
                 statement.execute("DROP TABLE FIELD_1_TABLE");
@@ -199,7 +201,7 @@ class JdbcStatementValidatorIT {
                     break;
                 }
             }
-            assertTrue(cause != null);
+            assertNotNull(cause);
             assertTrue(cause instanceof NamingException);
         }
     }

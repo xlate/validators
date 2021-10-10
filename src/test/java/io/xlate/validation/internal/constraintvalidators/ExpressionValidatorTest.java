@@ -54,6 +54,7 @@ class ExpressionValidatorTest {
         target = new ExpressionValidator();
         Mockito.when(annotation.when()).thenReturn("");
         Mockito.when(annotation.node()).thenReturn("");
+        Mockito.when(annotation.targetName()).thenReturn("self");
         Mockito.when(annotation.packageImports()).thenReturn(EMPTY_STRING_ARRAY);
         Mockito.when(annotation.classImports()).thenReturn(EMPTY_STRING_ARRAY);
         Mockito.when(annotation.staticImports()).thenReturn(EMPTY_STRING_ARRAY);

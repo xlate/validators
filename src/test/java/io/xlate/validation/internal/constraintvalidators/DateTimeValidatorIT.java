@@ -1,11 +1,12 @@
 package io.xlate.validation.internal.constraintvalidators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,22 +57,22 @@ class DateTimeValidatorIT {
     void testISODateInvalidValue() {
         bean.isoDate = "2018-02-29";
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
-        Assertions.assertTrue(violations.size() == 1);
-        Assertions.assertEquals("isoDate", violations.iterator().next().getPropertyPath().toString());
+        assertEquals(1, violations.size());
+        assertEquals("isoDate", violations.iterator().next().getPropertyPath().toString());
     }
 
     @Test
     void testISODateValidWhenLenient() {
         bean.isoDateLenient = "2018-02-29";
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
-        Assertions.assertTrue(violations.size() == 0);
+        assertEquals(0, violations.size());
     }
 
     @Test
     void testISODateValidValue() {
         bean.isoDate = "2020-02-29";
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
-        Assertions.assertTrue(violations.size() == 0);
+        assertEquals(0, violations.size());
     }
 
 }

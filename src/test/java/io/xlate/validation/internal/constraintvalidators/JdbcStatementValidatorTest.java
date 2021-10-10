@@ -1,6 +1,7 @@
 package io.xlate.validation.internal.constraintvalidators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -135,7 +136,7 @@ class JdbcStatementValidatorTest {
         }
 
         Throwable cause = ex.getCause();
-        assertTrue(cause != null);
+        assertNotNull(cause);
         assertTrue(cause instanceof NamingException);
     }
 
@@ -171,7 +172,7 @@ class JdbcStatementValidatorTest {
         });
 
         Throwable cause = ex.getCause();
-        assertTrue(cause != null);
+        assertNotNull(cause);
         assertEquals(SQLException.class, cause.getClass());
     }
 
@@ -259,20 +260,21 @@ class JdbcStatementValidatorTest {
     }
 
     @Test
-    void testSetParametersSQLException() {
+    void testSetParametersSQLException() throws SQLException {
         TestSetParametersSQLException self = new TestSetParametersSQLException();
         String[] parameters = { "self" };
         PreparedStatement statement = Mockito.mock(PreparedStatement.class);
+        Mockito.doThrow(java.sql.SQLException.class).when(statement).setObject(1, self);
+
         ELProcessor processor = new ELProcessor();
         processor.defineBean("self", self);
 
         ConstraintDeclarationException ex = assertThrows(ConstraintDeclarationException.class, () -> {
-            Mockito.doThrow(java.sql.SQLException.class).when(statement).setObject(1, self);
             target.setParameters(processor, parameters, statement);
         });
 
         Throwable cause = ex.getCause();
-        assertTrue(cause != null);
+        assertNotNull(cause);
         assertEquals(java.sql.SQLException.class, cause.getClass());
     }
 
@@ -289,7 +291,7 @@ class JdbcStatementValidatorTest {
         }).when(context).disableDefaultConstraintViolation();
 
         target.updateValidationContext(context, "", "No message");
-        assertTrue(disableDefaultConstraintViolationCalled.get() != true);
+        assertNotEquals(true, disableDefaultConstraintViolationCalled.get());
     }
 
     @Test

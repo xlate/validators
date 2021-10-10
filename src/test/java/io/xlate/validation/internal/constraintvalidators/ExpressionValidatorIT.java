@@ -53,9 +53,10 @@ class ExpressionValidatorIT {
     }
 
     @Expression(
-            value = "this.newPassword eq self.newPasswordConfirmation",
-            node = "newPasswordConfirmation",
-            message = "Password confirmation must match new password")
+        targetName = "this",
+        value = "this.newPassword eq this.newPasswordConfirmation",
+        node = "newPasswordConfirmation",
+        message = "Password confirmation must match new password")
     public static class PasswordBean {
         @NotNull
         private String newPassword;
@@ -71,6 +72,25 @@ class ExpressionValidatorIT {
         }
     }
 
+    public static class ImportBean {
+        public static final String TEST = "TEST";
+
+        @Expression(
+            value = "TEST.equals(self)",
+            staticImports = "io.xlate.validation.internal.constraintvalidators.ExpressionValidatorIT$ImportBean.TEST")
+        @Expression(
+            value = "ExpressionValidatorIT$ImportBean.TEST.equals(self)",
+            classImports = "io.xlate.validation.internal.constraintvalidators.ExpressionValidatorIT$ImportBean")
+        @Expression(
+            value = "ExpressionValidatorIT$ImportBean.TEST.equals(self)",
+            packageImports = "io.xlate.validation.internal.constraintvalidators")
+        private String value1;
+
+        public String getValue1() {
+            return value1;
+        }
+    }
+
     @BeforeEach
     void initialize() {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -81,7 +101,7 @@ class ExpressionValidatorIT {
         TestBean bean = new TestBean();
         bean.value1 = "illegal-value";
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
-        Assertions.assertTrue(violations.size() == 1);
+        Assertions.assertEquals(1, violations.size());
         Assertions.assertEquals("value1", violations.iterator().next().getPropertyPath().toString());
     }
 
@@ -90,7 +110,7 @@ class ExpressionValidatorIT {
         TestBean bean = new TestBean();
         bean.value1 = "legal-value";
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
-        Assertions.assertTrue(violations.size() == 0);
+        Assertions.assertEquals(0, violations.size());
     }
 
     @Test
@@ -99,7 +119,7 @@ class ExpressionValidatorIT {
         bean.value1 = "legal-value";
         bean.value2 = "legal-value";
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
-        Assertions.assertTrue(violations.size() == 1);
+        Assertions.assertEquals(1, violations.size());
         Assertions.assertEquals("value2", violations.iterator().next().getPropertyPath().toString());
     }
 
@@ -108,7 +128,7 @@ class ExpressionValidatorIT {
         TestBean bean = new TestBean();
         bean.value2 = "illegal-value";
         Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
-        Assertions.assertTrue(violations.size() == 1);
+        Assertions.assertEquals(1, violations.size());
         Assertions.assertEquals("", violations.iterator().next().getPropertyPath().toString());
         Assertions.assertEquals("value2 must be legal", violations.iterator().next().getMessage());
     }
@@ -119,7 +139,7 @@ class ExpressionValidatorIT {
         bean.newPassword = "newvalue";
         bean.newPasswordConfirmation = "newvalue";
         Set<ConstraintViolation<PasswordBean>> violations = validator.validate(bean);
-        Assertions.assertTrue(violations.size() == 0);
+        Assertions.assertEquals(0, violations.size());
     }
 
     @Test
@@ -128,9 +148,17 @@ class ExpressionValidatorIT {
         bean.newPassword = "newvalue";
         bean.newPasswordConfirmation = "newvalue1";
         Set<ConstraintViolation<PasswordBean>> violations = validator.validate(bean);
-        Assertions.assertTrue(violations.size() == 1);
+        Assertions.assertEquals(1, violations.size());
         Assertions.assertEquals("newPasswordConfirmation", violations.iterator().next().getPropertyPath().toString());
         Assertions.assertEquals("Password confirmation must match new password",
                                 violations.iterator().next().getMessage());
+    }
+
+    @Test
+    void testValueEqualsStaticValue() {
+        ImportBean bean = new ImportBean();
+        bean.value1 = ImportBean.TEST;
+        Set<ConstraintViolation<ImportBean>> violations = validator.validate(bean);
+        Assertions.assertEquals(0, violations.size());
     }
 }

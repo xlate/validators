@@ -16,11 +16,13 @@
  ******************************************************************************/
 package io.xlate.validation.internal.constraintvalidators;
 
-import jakarta.el.ELProcessor;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+import java.util.Arrays;
 
 import io.xlate.validation.constraints.Expression;
+import jakarta.el.ELProcessor;
+import jakarta.el.ImportHandler;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class ExpressionValidator implements BooleanExpression, ConstraintValidator<Expression, Object> {
 
@@ -33,8 +35,7 @@ public class ExpressionValidator implements BooleanExpression, ConstraintValidat
 
     @Override
     public boolean isValid(Object target, ConstraintValidatorContext context) {
-        ELProcessor processor = new ELProcessor();
-        processor.defineBean("self", target);
+        ELProcessor processor = buildProcessor(target);
 
         if (!evaluate(processor, annotation.when())) {
             return true;
@@ -54,5 +55,17 @@ public class ExpressionValidator implements BooleanExpression, ConstraintValidat
         }
 
         return true;
+    }
+
+    ELProcessor buildProcessor(Object target) {
+        ELProcessor processor = new ELProcessor();
+        ImportHandler imports = processor.getELManager().getELContext().getImportHandler();
+
+        processor.defineBean(annotation.targetName(), target);
+        Arrays.stream(annotation.packageImports()).forEach(imports::importPackage);
+        Arrays.stream(annotation.classImports()).forEach(imports::importClass);
+        Arrays.stream(annotation.staticImports()).forEach(imports::importStatic);
+
+        return processor;
     }
 }
