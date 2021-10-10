@@ -100,7 +100,7 @@ public @interface Expression {
      * @return the packages to be imported to the EL context during expression
      *         evaluation
      *
-     * @see jakarta.el.ImportHandler#importPackage(String)
+     * @see javax.el.ImportHandler#importPackage(String)
      */
     String[] packageImports() default {};
 
@@ -111,7 +111,7 @@ public @interface Expression {
      * @return the classes to be imported to the EL context during expression
      *         evaluation
      *
-     * @see jakarta.el.ImportHandler#importClass(String)
+     * @see javax.el.ImportHandler#importClass(String)
      */
     String[] classImports() default {};
 
@@ -123,7 +123,7 @@ public @interface Expression {
      * @return the static member names to be imported to the EL context during
      *         expression evaluation
      *
-     * @see jakarta.el.ImportHandler#importStatic(String)
+     * @see javax.el.ImportHandler#importStatic(String)
      */
     String[] staticImports() default {};
 
