@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.xlate</groupId>
   <artifactId>validators</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>1.1.1</version>
 
   <name>Additional Bean Validators for Java</name>
   <description>Additional validators and annotations for use with Java Bean Validation (JSR-303)</description>
@@ -18,7 +18,7 @@
     <url>https://github.com/xlate/validators</url>
     <connection>scm:git:https://github.com/xlate/validators.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/xlate/validators.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>v1.1.1</tag>
   </scm>
 
   <licenses>
