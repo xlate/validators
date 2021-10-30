@@ -18,6 +18,8 @@ package io.xlate.validation.internal.constraintvalidators;
 
 import java.util.Arrays;
 
+import javax.el.BeanNameResolver;
+import javax.el.ELManager;
 import javax.el.ELProcessor;
 import javax.el.ImportHandler;
 import javax.validation.ConstraintValidator;
@@ -60,9 +62,22 @@ public class ExpressionValidator implements BooleanExpression, ConstraintValidat
 
     ELProcessor buildProcessor(Object target) {
         ELProcessor processor = new ELProcessor();
-        ImportHandler imports = processor.getELManager().getELContext().getImportHandler();
+        ELManager manager = processor.getELManager();
+        ImportHandler imports = manager.getELContext().getImportHandler();
+        String targetName = annotation.targetName();
 
-        processor.defineBean(annotation.targetName(), target);
+        manager.addBeanNameResolver(new BeanNameResolver() {
+            @Override
+            public boolean isNameResolved(String beanName) {
+                return targetName.equals(beanName);
+            }
+
+            @Override
+            public Object getBean(String beanName) {
+                return isNameResolved(beanName) ? target : null;
+            }
+        });
+
         Arrays.stream(annotation.packageImports()).forEach(imports::importPackage);
         Arrays.stream(annotation.classImports()).forEach(imports::importClass);
         Arrays.stream(annotation.staticImports()).forEach(imports::importStatic);

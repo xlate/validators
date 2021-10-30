@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.el.PropertyNotFoundException;
 import javax.validation.ConstraintDeclarationException;
 import javax.validation.ConstraintValidatorContext;
 
@@ -164,5 +165,28 @@ class ExpressionValidatorTest {
             target.isValid(data, context);
         });
         Assertions.assertTrue(ex.getMessage().contains("`'0'` does not evaluate to Boolean"));
+    }
+
+    @Test
+    void testTargetIsNullThenValidationPasses() {
+        Mockito.when(annotation.when()).thenReturn("self == null");
+        Mockito.when(annotation.value()).thenReturn("self == null");
+        target.initialize(annotation);
+        Assertions.assertTrue(target.isValid(null, context));
+    }
+
+    @Test
+    void testTargetIsNullThenValidationFails() {
+        Mockito.when(annotation.when()).thenReturn("self == null");
+        Mockito.when(annotation.value()).thenReturn("self != null && self.length > 0");
+        target.initialize(annotation);
+        Assertions.assertFalse(target.isValid(null, context));
+    }
+
+    @Test
+    void testReferenceIsUnresolveableThrowsPropertyNotFoundException() {
+        Mockito.when(annotation.when()).thenReturn("invalidTarget == null");
+        target.initialize(annotation);
+        assertThrows(PropertyNotFoundException.class, () -> target.isValid(null, context));
     }
 }

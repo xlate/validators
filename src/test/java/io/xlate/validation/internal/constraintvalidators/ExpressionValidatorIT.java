@@ -54,8 +54,8 @@ class ExpressionValidatorIT {
     }
 
     @Expression(
-        targetName = "this",
-        value = "this.newPassword eq this.newPasswordConfirmation",
+        targetName = "target",
+        value = "target.newPassword eq target.newPasswordConfirmation",
         node = "newPasswordConfirmation",
         message = "Password confirmation must match new password")
     public static class PasswordBean {
