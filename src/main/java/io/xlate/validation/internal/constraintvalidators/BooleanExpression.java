@@ -1,5 +1,6 @@
 package io.xlate.validation.internal.constraintvalidators;
 
+import javax.el.BeanNameResolver;
 import javax.el.ELProcessor;
 import javax.validation.ConstraintDeclarationException;
 
@@ -17,6 +18,20 @@ public interface BooleanExpression {
         }
 
         return true;
+    }
+
+    default BeanNameResolver newNameResolver(Object target, String targetName) {
+        return new BeanNameResolver() {
+            @Override
+            public boolean isNameResolved(String beanName) {
+                return targetName.equals(beanName);
+            }
+
+            @Override
+            public Object getBean(String beanName) {
+                return isNameResolved(beanName) ? target : null;
+            }
+        };
     }
 
 }

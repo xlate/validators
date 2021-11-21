@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.el.ELManager;
 import javax.el.ELProcessor;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -52,7 +53,8 @@ public class JdbcStatementValidator implements BooleanExpression, ConstraintVali
 
         if (!when.isEmpty() || parameters.length > 0) {
             processor = new ELProcessor();
-            processor.defineBean("self", target);
+            ELManager manager = processor.getELManager();
+            manager.addBeanNameResolver(newNameResolver(target, "self"));
 
             if (!evaluate(processor, when)) {
                 // Validation does not apply based on 'when' condition
