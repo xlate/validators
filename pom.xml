@@ -148,6 +148,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${version.maven.javadoc.plugin}</version>
+          <configuration>
+            <additionalOptions>-html5</additionalOptions>
+            <sourcepath>src/main/java</sourcepath>
+            <excludePackageNames>io.xlate.validation.internal.*</excludePackageNames>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -291,9 +296,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <additionalOptions>-html5</additionalOptions>
-            </configuration>
             <executions>
               <execution>
                 <id>attach-javadocs</id>

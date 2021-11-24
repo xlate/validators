@@ -98,7 +98,7 @@ public @interface DateTime {
     /**
      * @return the resolver style to use during parsing. Ignored unless
      *         {@link #parserType()} is {@link ParserType#JAVA_TIME}.
-     * @see {@link java.time.format.DateTimeFormatter#getResolverStyle}
+     * @see java.time.format.DateTimeFormatter#getResolverStyle
      * @since 1.2
      */
     ResolverStyle resolverStyle() default ResolverStyle.SMART;
