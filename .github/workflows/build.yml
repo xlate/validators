@@ -43,18 +43,6 @@ jobs:
       - name: Maven build
         run: mvn -B verify package --file pom.xml
 
-      - name: Generate Coveralls File
-        if: matrix.java == '17'
-        run: mvn -B coveralls:report -Pcoverage -DdryRun=true
-
-      - name: Coveralls Analysis
-        if: matrix.java == '17'
-        uses: MikeEdgar/github-action@raw_coverage_file
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-file: ./target/coveralls.json
-          coverage-format: raw
-
   javadoc:
     runs-on: ubuntu-latest
     name: Verify JavaDocs

@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.format.ResolverStyle;
 
-import javax.validation.ConstraintDeclarationException;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintDeclarationException;
+import jakarta.validation.ConstraintValidatorContext;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

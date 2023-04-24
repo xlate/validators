@@ -22,9 +22,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.el.PropertyNotFoundException;
-import javax.validation.ConstraintDeclarationException;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.el.PropertyNotFoundException;
+import jakarta.validation.ConstraintDeclarationException;
+import jakarta.validation.ConstraintValidatorContext;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

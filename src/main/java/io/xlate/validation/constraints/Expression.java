@@ -29,9 +29,9 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.validation.Constraint;
-import javax.validation.ConstraintViolation;
-import javax.validation.Payload;
+import jakarta.validation.Constraint;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Payload;
 
 import io.xlate.validation.internal.constraintvalidators.ExpressionValidator;
 
@@ -100,7 +100,7 @@ public @interface Expression {
      * @return the packages to be imported to the EL context during expression
      *         evaluation
      *
-     * @see javax.el.ImportHandler#importPackage(String)
+     * @see jakarta.el.ImportHandler#importPackage(String)
      */
     String[] packageImports() default {};
 
@@ -111,7 +111,7 @@ public @interface Expression {
      * @return the classes to be imported to the EL context during expression
      *         evaluation
      *
-     * @see javax.el.ImportHandler#importClass(String)
+     * @see jakarta.el.ImportHandler#importClass(String)
      */
     String[] classImports() default {};
 
@@ -123,7 +123,7 @@ public @interface Expression {
      * @return the static member names to be imported to the EL context during
      *         expression evaluation
      *
-     * @see javax.el.ImportHandler#importStatic(String)
+     * @see jakarta.el.ImportHandler#importStatic(String)
      */
     String[] staticImports() default {};
 

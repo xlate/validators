@@ -21,15 +21,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.el.ELManager;
-import javax.el.ELProcessor;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import javax.validation.ConstraintDeclarationException;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.ValidationException;
+
+import jakarta.el.ELManager;
+import jakarta.el.ELProcessor;
+import jakarta.validation.ConstraintDeclarationException;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.ValidationException;
 
 import io.xlate.validation.constraints.JdbcStatement;
 
