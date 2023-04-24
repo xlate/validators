@@ -48,8 +48,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.release>11</maven.compiler.release>
 
     <!-- Sonar settings -->
     <sonar.projectKey>xlate_validators</sonar.projectKey>
@@ -65,13 +64,24 @@
     <version.maven.gpg.plugin>3.0.1</version.maven.gpg.plugin>
     <version.jakarta.xml.bind.api>4.0.0</version.jakarta.xml.bind.api>
     <version.jacoco.maven.plugin>0.8.9</version.jacoco.maven.plugin>
+    <version.derby>10.15.2.0</version.derby>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>jakarta.el</groupId>
+        <artifactId>jakarta.el-api</artifactId>
+        <version>5.0.1</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>
-      <version>2.0.2</version>
+      <version>3.0.2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -82,8 +92,12 @@
         -->
       <groupId>org.glassfish</groupId>
       <artifactId>jakarta.el</artifactId>
-      <version>3.0.4</version>
+      <version>4.0.2</version>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.el</groupId>
+      <artifactId>jakarta.el-api</artifactId>
     </dependency>
     <dependency>
       <groupId>jakarta.enterprise</groupId>
@@ -125,13 +139,13 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.16.1.1</version>
+      <version>${version.derby}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbytools</artifactId>
-      <version>10.16.1.1</version>
+      <version>${version.derby}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -161,11 +175,18 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${version.maven.surefire.plugin}</version>
+        <configuration>
+          <argLine>
+            --add-modules jakarta.el
+            ${argLine}
+          </argLine>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
