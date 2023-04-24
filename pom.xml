@@ -182,10 +182,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${version.maven.surefire.plugin}</version>
         <configuration>
-          <argLine>
-            --add-modules jakarta.el
-            ${argLine}
-          </argLine>
+          <argLine>--add-modules jakarta.el ${argLine}</argLine>
         </configuration>
       </plugin>
       <plugin>
@@ -196,6 +193,7 @@
           <systemProperties>
             <derby.stream.error.file>target/derby.log</derby.stream.error.file>
           </systemProperties>
+          <argLine>--add-modules jakarta.el ${argLine}</argLine>
         </configuration>
         <executions>
           <execution>
