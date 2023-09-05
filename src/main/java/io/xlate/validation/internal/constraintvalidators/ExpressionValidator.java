@@ -39,11 +39,11 @@ public class ExpressionValidator implements BooleanExpression, ConstraintValidat
     public boolean isValid(Object target, ConstraintValidatorContext context) {
         ELProcessor processor = buildProcessor(target);
 
-        if (!evaluate(processor, annotation.when())) {
+        if (!evaluate(processor, annotation.when(), null)) {
             return true;
         }
 
-        if (!evaluate(processor, annotation.value())) {
+        if (!evaluate(processor, annotation.value(), annotation.exceptionalValue().booleanValue())) {
             String nodeName = annotation.node();
 
             if (!nodeName.isEmpty()) {

@@ -56,13 +56,17 @@ public @interface Expression {
     Class<? extends Payload>[] payload() default {};
 
     /**
+     * A boolean expression evaluated to determine whether the constraint
+     * is valid. When the expression is true, it is considered valid. Else,
+     * it is considered invalid.
+     *
      * @return the expression to evaluate to determine the validity of the
      *         constraint
      */
     String value();
 
     /**
-     * An EL expression used to determine if the expression given by
+     * A boolean EL expression used to determine if the expression given by
      * {@link #value()} should be checked. This expression is available to
      * short-circuit the constraint validation of this {@link Expression} in
      * scenarios when it should not apply, e.g. a value is null and the
@@ -128,6 +132,16 @@ public @interface Expression {
     String[] staticImports() default {};
 
     /**
+     * Value used in place of the {@link #value()} expression's return when
+     * evaluation results in an exception being thrown.
+     *
+     * @return value used in place of the result of the {@link #value()}
+     *         expression
+     * @since 1.3
+     */
+    ExceptionalValue exceptionalValue() default ExceptionalValue.UNSET;
+
+    /**
      * Defines several {@link Expression} annotations on the same element.
      *
      * @see io.xlate.validation.constraints.Expression
@@ -138,4 +152,26 @@ public @interface Expression {
     @interface List {
         Expression[] value();
     }
+
+    /**
+     * Values allowed for {@linkplain Expression#exceptionalValue()}.
+     *
+     * @since 1.3
+     */
+    enum ExceptionalValue {
+        TRUE(Boolean.TRUE),
+        FALSE(Boolean.FALSE),
+        UNSET(null);
+
+        final Boolean booleanValue;
+
+        private ExceptionalValue(Boolean booleanValue) {
+            this.booleanValue = booleanValue;
+        }
+
+        public Boolean booleanValue() {
+            return booleanValue;
+        }
+    }
+
 }
