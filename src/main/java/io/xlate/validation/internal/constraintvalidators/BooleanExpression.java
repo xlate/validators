@@ -6,9 +6,19 @@ import jakarta.validation.ConstraintDeclarationException;
 
 public interface BooleanExpression {
 
-    default boolean evaluate(ELProcessor processor, String expression) {
+    default boolean evaluate(ELProcessor processor, String expression, Boolean exceptionalValue) {
         if (!expression.isEmpty()) {
-            Object result = processor.eval(expression);
+            Object result;
+
+            try {
+                result = processor.eval(expression);
+            } catch (Exception e) {
+                if (exceptionalValue != null) {
+                    result = exceptionalValue;
+                } else {
+                    throw e;
+                }
+            }
 
             if (result instanceof Boolean) {
                 return (Boolean) result;

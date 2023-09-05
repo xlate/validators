@@ -16,6 +16,7 @@
  ******************************************************************************/
 package io.xlate.validation.internal.constraintvalidators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Date;
@@ -30,6 +31,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -37,6 +40,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import io.xlate.validation.constraints.Expression;
+import io.xlate.validation.constraints.Expression.ExceptionalValue;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -60,6 +64,7 @@ class ExpressionValidatorTest {
         Mockito.when(annotation.packageImports()).thenReturn(EMPTY_STRING_ARRAY);
         Mockito.when(annotation.classImports()).thenReturn(EMPTY_STRING_ARRAY);
         Mockito.when(annotation.staticImports()).thenReturn(EMPTY_STRING_ARRAY);
+        Mockito.when(annotation.exceptionalValue()).thenReturn(ExceptionalValue.UNSET);
     }
 
     @Test
@@ -189,4 +194,18 @@ class ExpressionValidatorTest {
         target.initialize(annotation);
         assertThrows(PropertyNotFoundException.class, () -> target.isValid(null, context));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+        "TRUE, true",
+        "FALSE, false"
+    })
+    void testExceptionalValueUsedWhenExceptionThrown(ExceptionalValue ev, boolean expectedResult) {
+        Mockito.when(annotation.value()).thenReturn("Integer.parseInt('xyz') == 0");
+        Mockito.when(annotation.exceptionalValue()).thenReturn(ev);
+        target.initialize(annotation);
+        boolean actualResult = target.isValid(null, context);
+        assertEquals(expectedResult, actualResult);
+    }
+
 }

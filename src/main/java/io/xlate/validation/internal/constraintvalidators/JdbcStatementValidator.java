@@ -57,7 +57,7 @@ public class JdbcStatementValidator implements BooleanExpression, ConstraintVali
             ELManager manager = processor.getELManager();
             manager.addBeanNameResolver(newNameResolver(target, "self"));
 
-            if (!evaluate(processor, when)) {
+            if (!evaluate(processor, when, null)) {
                 // Validation does not apply based on 'when' condition
                 return true;
             }
