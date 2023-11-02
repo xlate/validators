@@ -17,15 +17,23 @@
 package io.xlate.validation.internal.constraintvalidators;
 
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 import jakarta.el.ELManager;
 import jakarta.el.ELProcessor;
 import jakarta.el.ImportHandler;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
+import jakarta.validation.constraintvalidation.SupportedValidationTarget;
+import jakarta.validation.constraintvalidation.ValidationTarget;
 
 import io.xlate.validation.constraints.Expression;
 
+@SupportedValidationTarget({
+    ValidationTarget.ANNOTATED_ELEMENT,
+    ValidationTarget.PARAMETERS
+})
 public class ExpressionValidator implements BooleanExpression, ConstraintValidator<Expression, Object> {
 
     private Expression annotation;
@@ -44,13 +52,21 @@ public class ExpressionValidator implements BooleanExpression, ConstraintValidat
         }
 
         if (!evaluate(processor, annotation.value(), annotation.exceptionalValue().booleanValue())) {
-            String nodeName = annotation.node();
+            String[] node = Arrays.stream(annotation.node())
+                    .filter(Predicate.not(String::isEmpty))
+                    .toArray(String[]::new);
 
-            if (!nodeName.isEmpty()) {
+            if (node.length > 0) {
                 context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate(annotation.message())
-                       .addPropertyNode(nodeName)
-                       .addConstraintViolation();
+                NodeBuilderCustomizableContext builder = context
+                        .buildConstraintViolationWithTemplate(annotation.message())
+                        .addPropertyNode(node[0]);
+
+                for (int n = 1; n < node.length; n++) {
+                    builder = builder.addPropertyNode(node[n]);
+                }
+
+                builder.addConstraintViolation();
             }
 
             return false;

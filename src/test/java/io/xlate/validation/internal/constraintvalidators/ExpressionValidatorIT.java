@@ -16,6 +16,7 @@
  ******************************************************************************/
 package io.xlate.validation.internal.constraintvalidators;
 
+import java.lang.reflect.Method;
 import java.util.Set;
 
 import jakarta.validation.ConstraintViolation;
@@ -50,6 +51,12 @@ class ExpressionValidatorIT {
 
         public String getValue2() {
             return value2;
+        }
+
+        @SuppressWarnings("unused")
+        @Expression(targetName = "args", value = "args[0] == args[1]", node = { "arg1", "value" })
+        public void doSomething(String arg0, String arg1) {
+            // No op
         }
     }
 
@@ -161,5 +168,17 @@ class ExpressionValidatorIT {
         bean.value1 = ImportBean.TEST;
         Set<ConstraintViolation<ImportBean>> violations = validator.validate(bean);
         Assertions.assertEquals(0, violations.size());
+    }
+
+    @Test
+    void testCrossParameterExpression() throws Exception {
+        TestBean bean = new TestBean();
+        Method doSomething = TestBean.class.getDeclaredMethod("doSomething", String.class, String.class);
+        Set<ConstraintViolation<TestBean>> violations = validator
+                .forExecutables()
+                .validateParameters(bean, doSomething, new String[] { "hello", "world" });
+
+        Assertions.assertEquals(1, violations.size());
+        Assertions.assertTrue(violations.iterator().next().getPropertyPath().toString().endsWith(".arg1.value"));
     }
 }
