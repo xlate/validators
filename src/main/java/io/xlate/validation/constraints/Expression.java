@@ -30,6 +30,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import jakarta.validation.Constraint;
+import jakarta.validation.ConstraintTarget;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Payload;
 
@@ -56,6 +57,14 @@ public @interface Expression {
     Class<? extends Payload>[] payload() default {};
 
     /**
+     * When the constraint is placed on a method target, this determines whether
+     * the validation target is the method's return value or its parameters.
+     *
+     * @since 1.4
+     */
+    ConstraintTarget validationAppliesTo() default ConstraintTarget.IMPLICIT;
+
+    /**
      * A boolean expression evaluated to determine whether the constraint
      * is valid. When the expression is true, it is considered valid. Else,
      * it is considered invalid.
@@ -78,13 +87,14 @@ public @interface Expression {
     String when() default "";
 
     /**
-     * Name of the node to be identified in a {@link ConstraintViolation} should
-     * validation fail.
+     * Name of the nodes to be identified in a {@link ConstraintViolation} should
+     * validation fail. If more than one entry is present, each will be added to
+     * the violation as a separate property node.
      *
-     * @return the name of the node to be identified in a
+     * @return the name of the nodes to be identified in a
      *         {@link ConstraintViolation} should validation fail.
      */
-    String node() default "";
+    String[] node() default {};
 
     /**
      * The name to be used within the {@link #value()} and {@link #when()}

@@ -59,7 +59,7 @@ class ExpressionValidatorTest {
     void setUp() {
         target = new ExpressionValidator();
         Mockito.when(annotation.when()).thenReturn("");
-        Mockito.when(annotation.node()).thenReturn("");
+        Mockito.when(annotation.node()).thenReturn(new String[0]);
         Mockito.when(annotation.targetName()).thenReturn("self");
         Mockito.when(annotation.packageImports()).thenReturn(EMPTY_STRING_ARRAY);
         Mockito.when(annotation.classImports()).thenReturn(EMPTY_STRING_ARRAY);
@@ -206,6 +206,15 @@ class ExpressionValidatorTest {
         target.initialize(annotation);
         boolean actualResult = target.isValid(null, context);
         assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    void testArgArrayElementsAccessible() {
+        Mockito.when(annotation.targetName()).thenReturn("args");
+        Mockito.when(annotation.when()).thenReturn("args[0] == null");
+        Mockito.when(annotation.value()).thenReturn("args[1] == args[2]");
+        target.initialize(annotation);
+        Assertions.assertTrue(target.isValid(new Object[] { null, 1, 1 }, context));
     }
 
 }
