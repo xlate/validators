@@ -77,11 +77,11 @@ class JdbcStatementValidatorIT {
 
     @BeforeAll
     static void setUpBeforeClass() throws ClassNotFoundException {
-        Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+        Class.forName("org.h2.Driver");
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:derby:memory:testDB;create=true");
+        return DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
     }
 
     @BeforeEach
