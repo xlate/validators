@@ -54,7 +54,7 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>xlate</sonar.organization>
 
-    <version.maven.compiler.plugin>3.12.1</version.maven.compiler.plugin>
+    <version.maven.compiler.plugin>3.13.0</version.maven.compiler.plugin>
     <version.maven.javadoc.plugin>3.6.3</version.maven.javadoc.plugin>
     <version.maven.release.plugin>3.0.1</version.maven.release.plugin>
     <version.maven.surefire.plugin>3.2.5</version.maven.surefire.plugin>
