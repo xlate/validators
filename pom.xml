@@ -60,7 +60,7 @@
     <version.maven.surefire.plugin>3.2.5</version.maven.surefire.plugin>
     <version.maven.failsafe-plugin>3.2.5</version.maven.failsafe-plugin>
     <version.maven.jar.plugin>3.4.0</version.maven.jar.plugin>
-    <version.maven.gpg.plugin>3.2.3</version.maven.gpg.plugin>
+    <version.maven.gpg.plugin>3.2.4</version.maven.gpg.plugin>
     <version.jakarta.xml.bind.api>4.0.1</version.jakarta.xml.bind.api>
     <version.jacoco.maven.plugin>0.8.12</version.jacoco.maven.plugin>
     <version.derby>10.16.1.1</version.derby>
