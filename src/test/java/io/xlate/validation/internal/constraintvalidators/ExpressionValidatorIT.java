@@ -17,9 +17,15 @@
 package io.xlate.validation.internal.constraintvalidators;
 
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ElementKind;
+import jakarta.validation.Path;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotNull;
@@ -45,6 +51,17 @@ class ExpressionValidatorIT {
 
         private String value2;
 
+        private List<
+            @Expression(
+                targetName = "entry",
+                when = "entry != null",
+                value = "validRegex(entry)",
+                staticImports = "io.xlate.validation.internal.constraintvalidators.ExpressionValidatorIT$TestBean.validRegex",
+                message = "value3 entries must be a valid regex"
+            )
+            String
+        > value3;
+
         public String getValue1() {
             return value1;
         }
@@ -53,10 +70,23 @@ class ExpressionValidatorIT {
             return value2;
         }
 
+        public List<String> getValue3() {
+            return value3;
+        }
+
         @SuppressWarnings("unused")
         @Expression(targetName = "args", value = "args[0] == args[1]", node = { "arg1", "value" })
         public void doSomething(String arg0, String arg1) {
             // No op
+        }
+
+        public static boolean validRegex(String value) {
+            try {
+                Pattern.compile(value);
+                return true;
+            } catch (@SuppressWarnings("unused") PatternSyntaxException e) {
+                return false;
+            }
         }
     }
 
@@ -180,5 +210,26 @@ class ExpressionValidatorIT {
 
         Assertions.assertEquals(1, violations.size());
         Assertions.assertTrue(violations.iterator().next().getPropertyPath().toString().endsWith(".arg1.value"));
+    }
+
+    @Test
+    void testValue3InvalidFromEntry() {
+        TestBean bean = new TestBean();
+        bean.value1 = "legal-value";
+        bean.value3 = List.of("(?:.*)", "(?:unclosed");
+        Set<ConstraintViolation<TestBean>> violations = validator.validate(bean);
+        Assertions.assertEquals(1, violations.size(), violations::toString);
+        ConstraintViolation<TestBean> violation = violations.iterator().next();
+        Assertions.assertEquals("value3 entries must be a valid regex", violation.getMessage());
+        Path propertyPath = violation.getPropertyPath();
+        Iterator<Path.Node> pathIterator = propertyPath.iterator();
+
+        Path.Node value3Node = pathIterator.next();
+        Assertions.assertEquals(ElementKind.PROPERTY, value3Node.getKind());
+        Assertions.assertEquals("value3", value3Node.getName());
+
+        Path.Node entryNode = pathIterator.next();
+        Assertions.assertEquals(ElementKind.CONTAINER_ELEMENT, entryNode.getKind());
+        Assertions.assertEquals(1, entryNode.as(Path.ContainerElementNode.class).getIndex());
     }
 }
