@@ -55,7 +55,7 @@
     <version.maven.jar.plugin>3.4.2</version.maven.jar.plugin>
     <version.maven.gpg.plugin>3.2.8</version.maven.gpg.plugin>
     <version.jakarta.xml.bind.api>4.0.1</version.jakarta.xml.bind.api>
-    <version.jacoco.maven.plugin>0.8.13</version.jacoco.maven.plugin>
+    <version.jacoco.maven.plugin>0.8.14</version.jacoco.maven.plugin>
     <version.derby>10.16.1.1</version.derby>
   </properties>
 
