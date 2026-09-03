@@ -157,7 +157,7 @@ public @interface Expression {
      *
      * @see io.xlate.validation.constraints.Expression
      */
-    @Target({ TYPE, METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
+    @Target({ TYPE, METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
     @Retention(RUNTIME)
     @Documented
     @interface List {
