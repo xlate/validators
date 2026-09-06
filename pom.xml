@@ -8,6 +8,7 @@
   <name>Additional Bean Validators for Java</name>
   <description>Additional validators and annotations for use with Java Bean Validation (JSR-303)</description>
   <url>https://github.com/xlate/validators</url>
+  <inceptionYear>2017</inceptionYear>
 
   <issueManagement>
     <url>https://github.com/xlate/validators/issues</url>
@@ -29,6 +30,11 @@
       <comments>A business-friendly OSS license</comments>
     </license>
   </licenses>
+
+  <organization>
+    <name>xlate.io LLC</name>
+    <url>http://www.xlate.io/</url>
+  </organization>
 
   <developers>
     <developer>
